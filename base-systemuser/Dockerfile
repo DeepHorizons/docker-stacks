@@ -19,6 +19,6 @@ COPY systemuser.sh /srv/singleuser/systemuser.sh
 RUN chmod 755 /srv/singleuser/systemuser.sh
 
 # smoke test entrypoint
-RUN USER_ID=65000 USER=systemusertest sh /srv/singleuser/systemuser.sh -h && userdel systemusertest
+RUN mkdir /home/systemusertest && USER_ID=65000 USER=systemusertest sh /srv/singleuser/systemuser.sh -h && userdel systemusertest && rm -rf /home/systemusertest
 
 CMD ["sh", "/srv/singleuser/systemuser.sh"]
