@@ -38,7 +38,8 @@ ENV JULIA_PKGDIR /opt/julia-global-packages
 
 # Install IJulia, the Julia Jupyter kernel
 RUN julia -e 'Pkg.init()'
-RUN julia -e 'Pkg.add("IJulia")'
+RUN julia -e 'Pkg.add("IJulia")' && \
+    julia -e 'Pkg.build("IJulia")'
 # precompile packages
 RUN julia -e 'using BinDeps' && \
     julia -e 'using Compat' && \
@@ -50,7 +51,11 @@ RUN julia -e 'using BinDeps' && \
     julia -e 'using URIParser' && \
     julia -e 'using ZMQ' && \
     julia -e 'Pkg.update()'
-RUN chmod -R 777 /opt/julia-global-packages/*
+# make sure anyone can use the packages
+# and install the IJulia kernel to the system level
+RUN chmod -R 777 /opt/julia-global-packages && \
+    jupyter kernelspec install /home/jovyan/.local/share/jupyter/kernels/* && \
+    rm -rf /home/jovyan/
 
 
 
