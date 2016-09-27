@@ -3,6 +3,8 @@ set -e
 if getent passwd $USER_ID > /dev/null ; then
   echo "$USER ($USER_ID) exists"
 else
+  echo "Creating group $USER ($USER_ID)"
+  groupadd -g $USER_ID $USER
   echo "Creating user $USER ($USER_ID)"
   useradd -u $USER_ID -g $USER_ID -s $SHELL $USER
   chown -R $USER /home/$USER
