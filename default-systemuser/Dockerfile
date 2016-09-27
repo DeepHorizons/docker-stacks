@@ -63,3 +63,27 @@ RUN chmod -R 777 /opt/julia-global-packages && \
 # Install IArm
 RUN pip install iarm && \
     python -m iarm_kernel.install
+
+
+
+# Install the C kernel
+RUN apt-get update && apt-get install gcc && \
+    pip install jupyter-c-kernel && \
+    cd /tmp && \
+    git clone https://github.com/brendan-rius/jupyter-c-kernel.git && \
+    cd jupyter-c-kernel && \
+    jupyter kernelspec install c_spec && \
+    rm -rf /tmp/*
+
+
+
+# Install C++ kernel
+RUN cd /tmp && \
+    wget https://root.cern.ch/download/cling/cling_2016-09-26_ubuntu16.tar.bz2 && \
+    tar -xvjf cling_2016-09-26_ubuntu16.tar.bz2 && \
+    mv cling_2016-09-26_ubuntu16 /opt/cling && \
+    ln -s /opt/cling/bin/cling /usr/bin/cling && \
+    cd /opt/cling/share/cling/Jupyter/kernel/ && \
+    pip install -e . && \
+    jupyter kernelspec install cling && \
+    rm -rf /tmp/*
