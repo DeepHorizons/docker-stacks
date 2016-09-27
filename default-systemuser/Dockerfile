@@ -82,8 +82,8 @@ RUN cd /tmp && \
     wget https://root.cern.ch/download/cling/cling_2016-09-26_ubuntu16.tar.bz2 && \
     tar -xvjf cling_2016-09-26_ubuntu16.tar.bz2 && \
     mv cling_2016-09-26_ubuntu16 /opt/cling && \
-    ln -s /opt/cling/bin/cling /usr/bin/cling && \
     cd /opt/cling/share/cling/Jupyter/kernel/ && \
     pip install -e . && \
     jupyter kernelspec install cling && \
     rm -rf /tmp/*
+ENV PATH /opt/cling/bin:$PATH
