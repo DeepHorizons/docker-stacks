@@ -10,6 +10,11 @@ WORKDIR /home
 RUN userdel jovyan && rm -rf /home/jovyan
 ENV SHELL /bin/bash
 
+# Install python virtualenv
+RUN conda install --quiet --yes \
+    'virtualenv=15.0.*' && \
+    conda clean -tipsy
+
 # Get the single-user script
 RUN wget -q https://raw.githubusercontent.com/jupyterhub/jupyterhub/0.6.1/scripts/jupyterhub-singleuser -O /usr/local/bin/jupyterhub-singleuser && \
     chmod 755 /usr/local/bin/jupyterhub-singleuser
