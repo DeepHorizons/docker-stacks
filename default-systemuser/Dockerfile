@@ -89,3 +89,7 @@ RUN cd /tmp && \
     jupyter kernelspec install cling && \
     rm -rf /tmp/*
 ENV PATH /opt/cling/bin:$PATH
+
+
+# Test to see if something is overwriting the LD_LIBRARY_PATH variable
+ENV LD_LIBRARY_PATH $CONDA_DIR/lib
