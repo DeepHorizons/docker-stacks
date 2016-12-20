@@ -79,16 +79,17 @@ RUN apt-get update && apt-get install gcc && \
 
 
 
-# Install C++ kernel
-RUN cd /tmp && \
-    wget https://root.cern.ch/download/cling/cling_2016-09-26_ubuntu16.tar.bz2 && \
-    tar -xvjf cling_2016-09-26_ubuntu16.tar.bz2 && \
-    mv cling_2016-09-26_ubuntu16 /opt/cling && \
-    cd /opt/cling/share/cling/Jupyter/kernel/ && \
-    pip install -e . && \
-    jupyter kernelspec install cling && \
-    rm -rf /tmp/*
-ENV PATH /opt/cling/bin:$PATH
+## Install C++ kernel
+## TODO they changed how to install cling, update to reflect that; removing it from the build for now
+#RUN cd /tmp && \
+#    wget https://root.cern.ch/download/cling/cling_2016-09-26_ubuntu16.tar.bz2 && \
+#    tar -xvjf cling_2016-09-26_ubuntu16.tar.bz2 && \
+#    mv cling_2016-09-26_ubuntu16 /opt/cling && \
+#    cd /opt/cling/share/cling/Jupyter/kernel/ && \
+#    pip install -e . && \
+#    jupyter kernelspec install cling && \
+#    rm -rf /tmp/*
+#ENV PATH /opt/cling/bin:$PATH
 
 
 # Test to see if something is overwriting the LD_LIBRARY_PATH variable
