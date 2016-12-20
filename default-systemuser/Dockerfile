@@ -25,38 +25,40 @@ RUN pip --no-cache-dir install octave_kernel && \
 
 
 
-# Install and setup Julia
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    julia \
-    libnettle6 \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# We need this to install julia packages system wide
-RUN mkdir /opt/julia-global-packages && \
-    echo 'push!(LOAD_PATH, "/opt/julia-global-packages")' >> /etc/julia/juliarc.jl
-ENV JULIA_PKGDIR /opt/julia-global-packages
-
-# Install IJulia, the Julia Jupyter kernel
-RUN julia -e 'Pkg.init()'
-RUN julia -e 'Pkg.add("IJulia")' && \
-    julia -e 'Pkg.build("IJulia")'
-# precompile packages
-RUN julia -e 'using BinDeps' && \
-    julia -e 'using Compat' && \
-    julia -e 'using Conda' && \
-    julia -e 'using IJulia' && \
-    julia -e 'using JSON' && \
-    julia -e 'using Nettle' && \
-    julia -e 'using SHA' && \
-    julia -e 'using URIParser' && \
-    julia -e 'using ZMQ' && \
-    julia -e 'Pkg.update()'
-# make sure anyone can use the packages
-# and install the IJulia kernel to the system level
-RUN chmod -R 777 /opt/julia-global-packages && \
-    jupyter kernelspec install /home/jovyan/.local/share/jupyter/kernels/* && \
-    rm -rf /home/jovyan/
+## Install and setup Julia
+## This takes forever
+## TODO move this to its own image
+#RUN apt-get update && apt-get install -yq --no-install-recommends \
+#    julia \
+#    libnettle6 \
+#    && apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
+#
+## We need this to install julia packages system wide
+#RUN mkdir /opt/julia-global-packages && \
+#    echo 'push!(LOAD_PATH, "/opt/julia-global-packages")' >> /etc/julia/juliarc.jl
+#ENV JULIA_PKGDIR /opt/julia-global-packages
+#
+## Install IJulia, the Julia Jupyter kernel
+#RUN julia -e 'Pkg.init()'
+#RUN julia -e 'Pkg.add("IJulia")' && \
+#    julia -e 'Pkg.build("IJulia")'
+## precompile packages
+#RUN julia -e 'using BinDeps' && \
+#    julia -e 'using Compat' && \
+#    julia -e 'using Conda' && \
+#    julia -e 'using IJulia' && \
+#    julia -e 'using JSON' && \
+#    julia -e 'using Nettle' && \
+#    julia -e 'using SHA' && \
+#    julia -e 'using URIParser' && \
+#    julia -e 'using ZMQ' && \
+#    julia -e 'Pkg.update()'
+## make sure anyone can use the packages
+## and install the IJulia kernel to the system level
+#RUN chmod -R 777 /opt/julia-global-packages && \
+#    jupyter kernelspec install /home/jovyan/.local/share/jupyter/kernels/* && \
+#    rm -rf /home/jovyan/
 
 
 
