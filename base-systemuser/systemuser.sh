@@ -16,6 +16,8 @@ then
     notebook_arg="--notebook-dir=${NOTEBOOK_DIR}"
 fi
 
+export LD_LIBRARY_PATH=$CONDA_DIR/bin
+
 sudo -E PATH="${CONDA_DIR}/bin:$PATH" -u $USER jupyterhub-singleuser \
   --port=8888 \
   --ip=0.0.0.0 \
