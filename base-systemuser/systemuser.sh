@@ -16,6 +16,7 @@ then
     notebook_arg="--notebook-dir=${NOTEBOOK_DIR}"
 fi
 
+echo "Starting singleuser instance"
 sudo LD_LIBRARY_PATH="${CONDA_DIR}/lib" -E PATH="${CONDA_DIR}/bin:$PATH" -u $USER jupyterhub-singleuser \
   --port=8888 \
   --ip=0.0.0.0 \
