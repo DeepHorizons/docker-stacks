@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+echo $(date)
 if getent passwd $USER_ID > /dev/null ; then
   echo "$USER ($USER_ID) exists"
 else
@@ -10,6 +11,7 @@ else
   chown -R $USER /home/$USER
 fi
 
+echo "Setting notebook dir..."
 notebook_arg=""
 if [ -n "${NOTEBOOK_DIR:+x}" ]
 then
