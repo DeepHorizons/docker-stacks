@@ -2,23 +2,24 @@
 set -e
 echo $(date)
 if getent passwd $USER_ID > /dev/null ; then
-  echo "$USER ($USER_ID) exists"
+  date; echo "$USER ($USER_ID) exists"
 else
-  echo "Creating group $USER ($USER_ID)"
+  date; echo "Creating group $USER ($USER_ID)"
   groupadd -g $USER_ID $USER
-  echo "Creating user $USER ($USER_ID)"
+  date; echo "Creating user $USER ($USER_ID)"
   useradd -u $USER_ID -g $USER_ID -s $SHELL $USER
+  date; echo "Chowning home user dir"
   chown -R $USER /home/$USER
 fi
 
-echo "Setting notebook dir..."
+date; echo "Setting notebook dir..."
 notebook_arg=""
 if [ -n "${NOTEBOOK_DIR:+x}" ]
 then
     notebook_arg="--notebook-dir=${NOTEBOOK_DIR}"
 fi
 
-echo "Starting singleuser instance"
+date; echo "Starting singleuser instance"
 sudo LD_LIBRARY_PATH="${CONDA_DIR}/lib" -E PATH="${CONDA_DIR}/bin:$PATH" -u $USER jupyterhub-singleuser \
   --port=8888 \
   --ip=0.0.0.0 \
