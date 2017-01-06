@@ -18,9 +18,10 @@ USER $NB_USER
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
 RUN conda install --quiet --yes \
-    'ipywidgets=5.1*' \
-    'pandas=0.18*' \
-    'numexpr=2.5*' \
+    'nomkl' \
+    'ipywidgets=5.2*' \
+    'pandas=0.19*' \
+    'numexpr=2.6*' \
     'matplotlib=1.5*' \
     'scipy=0.17*' \
     'seaborn=0.7*' \
@@ -36,7 +37,10 @@ RUN conda install --quiet --yes \
     'bokeh=0.11*' \
     'sqlalchemy=1.0*' \
     'hdf5=1.8.17' \
-    'h5py=2.6*' && \
+    'h5py=2.6*' \
+    'vincent=0.4.*' \
+    'beautifulsoup4=4.5.*' \
+    'xlrd'  && \
     conda remove --quiet --yes --force qt pyqt && \
     conda clean -tipsy
 
@@ -47,10 +51,11 @@ RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
 RUN conda create --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
+    'nomkl' \
     'ipython=4.2*' \
-    'ipywidgets=5.1*' \
-    'pandas=0.18*' \
-    'numexpr=2.5*' \
+    'ipywidgets=5.2*' \
+    'pandas=0.19*' \
+    'numexpr=2.6*' \
     'matplotlib=1.5*' \
     'scipy=0.17*' \
     'seaborn=0.7*' \
@@ -67,12 +72,19 @@ RUN conda create --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
     'hdf5=1.8.17' \
     'h5py=2.6*' \
     'sqlalchemy=1.0*' \
-    'pyzmq' && \
+    'pyzmq' \
+    'vincent=0.4.*' \
+    'beautifulsoup4=4.5.*' \
+    'xlrd' && \
     conda remove -n python2 --quiet --yes --force qt pyqt && \
     conda clean -tipsy
 # Add shortcuts to distinguish pip for python2 and python3 envs
 RUN ln -s $CONDA_DIR/envs/python2/bin/pip $CONDA_DIR/bin/pip2 && \
     ln -s $CONDA_DIR/bin/pip $CONDA_DIR/bin/pip3
+
+# Import matplotlib the first time to build the font cache.
+ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+RUN MPLBACKEND=Agg $CONDA_DIR/envs/python2/bin/python -c "import matplotlib.pyplot"
 
 # Configure ipython kernel to use matplotlib inline backend by default
 RUN mkdir -p $HOME/.ipython/profile_default/startup
@@ -81,7 +93,12 @@ COPY mplimporthook.py $HOME/.ipython/profile_default/startup/
 USER root
 
 # Install Python 2 kernel spec globally to avoid permission problems when NB_UID
-# switching at runtime.
-RUN $CONDA_DIR/envs/python2/bin/python -m ipykernel install
+# switching at runtime and to allow the notebook server running out of the root
+# environment to find it. Also, activate the python2 environment upon kernel
+# launch.
+RUN pip install kernda --no-cache && \
+    $CONDA_DIR/envs/python2/bin/python -m ipykernel install && \
+    kernda -o -y /usr/local/share/jupyter/kernels/python2/kernel.json && \
+    pip uninstall kernda -y
 
 USER $NB_USER

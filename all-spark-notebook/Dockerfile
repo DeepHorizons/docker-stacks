@@ -20,13 +20,14 @@ RUN apt-get update && \
 USER $NB_USER
 
 # R packages
+# Pin r-base to a specific build number for https://github.com/jupyter/docker-stacks/issues/210#issuecomment-246081809
 RUN conda config --add channels r && \
     conda install --quiet --yes \
-    'r-base=3.3*' \
-    'r-irkernel=0.6*' \
+    'r-base=3.3.1 1' \
+    'r-irkernel=0.7*' \
     'r-ggplot2=2.1*' \
     'r-rcurl=1.95*' && conda clean -tipsy
 
 # Apache Toree kernel
-RUN pip --no-cache-dir install toree==0.1.0.dev7
-RUN jupyter toree install --user
+RUN pip --no-cache-dir install https://dist.apache.org/repos/dist/dev/incubator/toree/0.2.0/snapshots/dev1/toree-pip/toree-0.2.0.dev1.tar.gz
+RUN jupyter toree install --sys-prefix
