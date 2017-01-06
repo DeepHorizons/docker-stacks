@@ -9,8 +9,9 @@ else
   date; echo "Creating user $USER ($USER_ID)"
   useradd -u $USER_ID -g $USER_ID -s $SHELL $USER
   date; echo "Chowning home user dir"
-  # This takes about 45 seconds
+  # This takes 20-45 seconds
   #chown -R $USER /home/$USER
+  # This takes ~ 5 seconds
   find /home/$USER -not -user $USER -exec chown $USER {} \+
 fi
 
