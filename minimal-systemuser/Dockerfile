@@ -6,13 +6,20 @@ MAINTAINER Joshua Milas <jgm6496@rit.edu>
 USER root
 
 # Install the spell check plugin
-RUN jupyter nbextension install https://bitbucket.org/ipre/calico/downloads/calico-spell-check-1.0.zip && \
-    jupyter nbextension enable calico-spell-check
-## Another way as described here https://groups.google.com/forum/#!topic/jupyter/LWGyiOtBZDA
-#RUN cd /tmp && \
-#    git clone https://github.com/Calysto/notebook-extensions.git && \
-#    cd notebook-extensions && \
-#    jupyter nbextension install calysto --user
+# This is the old way of doing it
+#RUN jupyter nbextension install --system https://bitbucket.org/ipre/calico/downloads/calico-spell-check-1.0.zip && \
+#    jupyter nbextension enable calico-spell-check && \
+#    rm -rf /home/jovyan
+# Another way as described here https://groups.google.com/forum/#!topic/jupyter/LWGyiOtBZDA
+# This way uses the new repo
+# Was not working, fixed with https://github.com/Calysto/notebook-extensions/pull/6
+RUN cd /tmp && \
+    git clone https://github.com/Calysto/notebook-extensions.git && \
+    cd notebook-extensions && \
+    jupyter nbextension install calysto --system && \
+    jupyter nbextension enable calysto/spell-check/main && \
+    rm -rf /home/jovyan && \
+    rm -rf /tmp/*
 
 # Add the KGCOE report template and files
 # This must be changed if there is an update to python
