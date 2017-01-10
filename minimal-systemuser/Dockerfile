@@ -17,7 +17,7 @@ RUN cd /tmp && \
     git clone https://github.com/Calysto/notebook-extensions.git && \
     cd notebook-extensions && \
     jupyter nbextension install calysto --system && \
-    jupyter nbextension enable calysto/spell-check/main && \
+    jupyter nbextension enable calysto/spell-check/main --system && \
     rm -rf /home/jovyan && \
     rm -rf /tmp/*
 
