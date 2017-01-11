@@ -8,11 +8,15 @@ else
   groupadd -g $USER_ID $USER
   date; echo "Creating user $USER ($USER_ID)"
   useradd -u $USER_ID -g $USER_ID -s $SHELL $USER
+
   date; echo "Chowning home user dir"
-  # This takes 20-45 seconds
-  #chown -R $USER /home/$USER
-  # This takes ~ 5 seconds
-  find /home/$USER -not -user $USER -exec chown $USER {} \+
+  # Need to make sure it works on sh, not on bash
+  if [ `stat -c '%u' /home/$USER` -ne $USER_ID ]; then
+    echo "/home/$USER is not owned by $USER_ID; chowning"
+    chown -R $USER /home/$USER &
+    # Give it a head start
+    sleep 10
+  fi
 fi
 
 date; echo "Setting notebook dir..."
