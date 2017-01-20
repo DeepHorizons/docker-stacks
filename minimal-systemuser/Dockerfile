@@ -6,13 +6,6 @@ MAINTAINER Joshua Milas <jgm6496@rit.edu>
 USER root
 
 # Install the spell check plugin
-# This is the old way of doing it
-#RUN jupyter nbextension install --system https://bitbucket.org/ipre/calico/downloads/calico-spell-check-1.0.zip && \
-#    jupyter nbextension enable calico-spell-check && \
-#    rm -rf /home/jovyan
-# Another way as described here https://groups.google.com/forum/#!topic/jupyter/LWGyiOtBZDA
-# This way uses the new repo
-# Was not working, fixed with https://github.com/Calysto/notebook-extensions/pull/6
 RUN cd /tmp && \
     git clone https://github.com/Calysto/notebook-extensions.git && \
     cd notebook-extensions && \
