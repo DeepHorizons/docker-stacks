@@ -1,10 +1,17 @@
 # The default image for spawning notebooks
-# Has Pyton, Octave, and Julia
+# Has Python, Octave, and Julia
 
 FROM ritjupyter/minimal-systemuser
 MAINTAINER Joshua Milas <jgm6496@rit.edu>
 
 USER root
+
+# Add matplotLib
+RUN conda install --quiet --yes \
+    'matplotlib' && \
+    conda clean -tipsy
+
+
 
 # Install and setup octave
 # Install Octave, all of its packages, and gnuplot
