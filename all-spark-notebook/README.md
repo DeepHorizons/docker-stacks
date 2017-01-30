@@ -8,11 +8,12 @@
 * Jupyter Notebook 4.3.x
 * Conda Python 3.x and Python 2.7.x environments
 * Conda R 3.3.x environment
-* Scala 2.10.x
+* Scala 2.11.x
 * pyspark, pandas, matplotlib, scipy, seaborn, scikit-learn pre-installed for Python
 * ggplot2, rcurl preinstalled for R
 * Spark 2.0.2 with Hadoop 2.7 for use in local mode or to connect to a cluster of Spark workers
 * Mesos client 0.25 binary that can communicate with a Mesos master
+* spylon-kernel
 * Unprivileged user `jovyan` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/jovyan` and `/opt/conda`
 * [tini](https://github.com/krallin/tini) as the container entrypoint and [start-notebook.sh](../base-notebook/start-notebook.sh) as the default command
 * A [start-singleuser.sh](../base-notebook/start-singleuser.sh) script useful for running a single-user instance of the Notebook server, as required by JupyterHub
@@ -75,6 +76,19 @@ head(filter(df, df$Petal_Width > 0.2))
 2. Use the pre-configured `SparkContext` in variable `sc`.
 
 For example:
+
+```
+val rdd = sc.parallelize(0 to 999)
+rdd.takeSample(false, 5)
+```
+
+### In spylon-kernel - Scala Notebook
+
+0. Run the container as shown above.
+1. Open a spylon-kernel notebook
+2. Lazily instantiate the sparkcontext by just running any cell without magics
+
+For example
 
 ```
 val rdd = sc.parallelize(0 to 999)
@@ -196,7 +210,7 @@ Connection to Spark Cluster on Standalone Mode requires the following set of ste
 
 The Docker container executes a [`start-notebook.sh` script](../base-notebook/start-notebook.sh) script by default. The `start-notebook.sh` script handles the `NB_UID` and `GRANT_SUDO` features documented in the next section, and then executes the `jupyter notebook`.
 
-You can pass [Jupyter command line options](https://jupyter.readthedocs.io/en/latest/projects/jupyter-command.html) through the `start-notebook.sh` script when launching the container. For example, to secure the Notebook server with a custom password hashed using `IPython.lib.passwd()` instead of the default token, run the following:
+You can pass [Jupyter command line options](https://jupyter.readthedocs.io/en/latest/projects/jupyter-command.html) through the `start-notebook.sh` script when launching the container. For example, to secure the Notebook server with a custom password hashed ([how-to](http://jupyter-notebook.readthedocs.io/en/latest/public_server.html#preparing-a-hashed-password)) instead of the default token, run the following:
 
 ```
 docker run -d -p 8888:8888 jupyter/all-spark-notebook start-notebook.sh --NotebookApp.password='sha1:74ba40f8a388:c913541b7ee99d15d5ed31d4226bf7838f83a50e'
