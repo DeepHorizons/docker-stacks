@@ -23,6 +23,8 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     texlive-fonts-extra \
     texlive-fonts-recommended \
     texlive-generic-recommended \
+    texlive-xetex \
+    lmodern \
     libxrender1 \
     inkscape \
     && apt-get clean && \
